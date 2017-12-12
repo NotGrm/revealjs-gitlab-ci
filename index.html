@@ -26,7 +26,30 @@
 			<div class="slides">
 				<section>
 					<h1>Gitlab CI</h1>
-					<img src="cicd_pipeline_infograph.png" alt="">
+					<img src="images/cicd_pipeline_infograph.png">
+				</section>
+				<section>
+					<section>
+						<h2>Glossaire</h2>
+						<p>Intégration continue ?</p>
+						<p>Livraison continue ?</p>
+						<p>Déploiement continue ?</p>
+					</section>
+					<section>
+						<h3>Intégration continue</h3>
+						<p>Compilation et Test l'application à chaque push fait par un développeur</p>
+						<h4>CI = TEST + COMPILE</h4>
+					</section>
+					<section>
+						<h3>Livraison continue</h3>
+						<p>Permet à l'application d'être déployée rapidement avec une intervention humaine minime</p>
+						<h4>CDel = TEST + COMPILE + DEPLOIMENT SEMI AUTO</h4>
+					</section>
+					<section>
+						<h3>Déploiement continue</h3>
+						<p>Le moindre changement effectué sur l'application conduit à une mise en prod dans la foulée de manière totalement automatique</p>
+						<h4>Cdep = TEST + COMPILE + DEPLOIMENT TOUT AUTO</h4>
+					</section>
 				</section>
 				<section>
 					<section>
@@ -36,6 +59,15 @@
 						<p>Intégré à Gitlab depuis la version 8</p>
 						<p>Service d'intégration continue (CI)</p>
 						<p>Automatise le déploiement d'une application (CD) dans les dernières version</p>
+					</section>
+					<section>
+						<img src="images/gitlab-ci.png" class="stretch">
+					</section>
+					<section>
+						<img src="images/gitlab-commits.png" class="stretch">
+					</section>
+					<section>
+						<img src="images/gitlab-merge-request .png" class="stretch">
 					</section>
 					<section>
 						<h3>Pour l'utiliser c'est facile</h3>
@@ -80,6 +112,9 @@
 							</p>
 						</textarea>
 					</section>
+					<section>
+						<img src="images/gitlab-runner.png" class="stretch">
+					</section>
 				</section>
 				<section>
 					<section>
@@ -104,7 +139,7 @@
 								</ul>
 							</li>
 							<li>File d'attente de type FIFO pour executer les jobs</li>
-							<li>Utiles pour des projets ayant une haute activité de CI</li>
+							<li>Utiles pour des projets ayant une haute activité</li>
 						</ul>
 					</section>
 				</section>
@@ -113,12 +148,14 @@
 						<h2>Le fichier .gitlab-ci.yml</h2>
 					</section>
 					<section>
-						<p>Les développeurs utilisent ce fichier pour décrire à Gitlab comment construire le projet.</p>
-						<p>A chaque push* Gitlab va regarder ce fichier pour déterminer les jobs qui seront executés par le(s) runner(s)</p>
-						<p>Le fichier est versionné avec le projet, ce qui permet au projet de toujours compilé, même en cas de reprise d'une vieille version, ou changmeent majeur sur une nouvelle branche. </p>
+						<h3>Le fichier .gitlab-ci.yml</h3>
+						<p>Écrit par les développeurs</p> 
+						<p>Utilisé par Gitlab</p>
+						<p>A chaque push*</p>
+						<p>Versionné</p>
 					</section>
 					<section>
-						<p>Les jobs peuvent-être regroupés en stage par les développeurs, en sachant que :</p>
+						<h3>Les stages</h3>
 						<ul>
 							<li>tous les jobs d'un stage sont executés en parallèle</li>
 							<li>
@@ -162,15 +199,16 @@
 						<h2>Des instructions à retenir</h2>
 					</section>
 					<section>
-						<ul>
-							<li>before_script</li>
-							<li>variables</li>
-							<li>script</li>
-							<li>stage</li>
-							<li>only/except</li>
-							<li>tags</li>
-						</ul>
+						<p class="fragment fade-in"><code>before_script</code></p>
+						<p class="fragment fade-in"><code>variables</code></p>
+						<p class="fragment fade-in"><code>script</code></p>
+						<p class="fragment fade-in"><code>stage</code></p>
+						<p class="fragment fade-in"><code>only/except</code></p>
+						<p class="fragment fade-in"><code>tags</code></p>
 					</section>
+				</section>
+				<section>
+					<h1>That's all folks!</h1>
 				</section>
 			</div>
 		</div>
