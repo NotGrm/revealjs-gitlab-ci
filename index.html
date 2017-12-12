@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Gitlab CI</h1>
+					<img src="cicd_pipeline_infograph.png" alt="">
+				</section>
+				<section>
+					<section>
+						<h2>C'est quoi Gitlab CI ?</h2>
+					</section>
+					<section>
+						<p>Intégré à Gitlab depuis la version 8</p>
+						<p>Service d'intégration continue (CI)</p>
+						<p>Automatise le déploiement d'une application (CD) dans les dernières version</p>
+					</section>
+					<section>
+						<h3>Pour l'utiliser c'est facile</h3>
+						<p>Activé par défaut sur tous les nouveaux projets. </p>
+						<p>Il suffit alors :</p>
+						<ul>
+							<li>De configurer un runner Gitlab</li>
+							<li>D'ajouter un fichier .gitlab-ci.yml à son projet</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Configurer un runner Gitlab</h2>
+					</section>
+					<section>
+						<p>Écrit en Go</p>
+						<p>Installable partout (Linux, Mac Os, Windows, ...)</p>
+						<p>Supporte plusieux executors (Shell, Docker, Virtualbox...)</p>
+						<p>Permet d'executer plusieurs jobs en simultané</p>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							### Configurer un runner
+
+							```
+							gitlab-runner register
+							```
+
+							Le processus vous demandera les questions suivantes :
+
+							1. L'url du serveur
+							1. Le token d'authentification
+							1. Le nom du runner
+							1. Les tags associés au runner
+							1. Si le runner peut éxécuter des jobs non taggés
+							1. Si il faut restreindre le runner au projet courant
+							1. L'executor utilisé pour accomplir les jobs
+
+							<p>
+								<small><a href="https://docs.gitlab.com/runner/executors/README.html#executors">Compératif executors</a></small>
+							</p>
+						</textarea>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Runners partagés / spécifiques</h2>
+						<p>Au moment de l'enregistrement, il faut décider si le runner sera partagé ou spécifique.</p>
+					</section>
+					<section>
+						<h3>Les runners partagés</h3>
+						<ul>
+							<li>Utiles pour les jobs, qui ont des prérequis communs.</li>
+							<li>File d'attente basée sur un modèle de fair use.</li>
+							<li>Plus facile, à maintenir et à mettre à jour</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Les runners spécifiques</h3>
+						<ul>
+							<li>
+								Utiles pour des jobs avec des prérequis spéciaux
+								<ul>
+									<li>ne pas partager la clé SSH de déploiement</li>
+								</ul>
+							</li>
+							<li>File d'attente de type FIFO pour executer les jobs</li>
+							<li>Utiles pour des projets ayant une haute activité de CI</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Le fichier .gitlab-ci.yml</h2>
+					</section>
+					<section>
+						<p>Les développeurs utilisent ce fichier pour décrire à Gitlab comment construire le projet.</p>
+						<p>A chaque push* Gitlab va regarder ce fichier pour déterminer les jobs qui seront executés par le(s) runner(s)</p>
+						<p>Le fichier est versionné avec le projet, ce qui permet au projet de toujours compilé, même en cas de reprise d'une vieille version, ou changmeent majeur sur une nouvelle branche. </p>
+					</section>
+					<section>
+						<p>Les jobs peuvent-être regroupés en stage par les développeurs, en sachant que :</p>
+						<ul>
+							<li>tous les jobs d'un stage sont executés en parallèle</li>
+							<li>
+								les jobs du stage suivants ne commencent que quand tous ceux du précédent ont réussi.
+								<ul>
+									<li>Gitlab définit 3 stages par défaut (build, test, deploy)</li>
+									<li>Le stage par défaut d'un job est test</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Un exemple simple</h2>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							```
+							before_script:
+							  - apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev nodejs
+							  - ruby -v
+							  - which ruby
+							  - gem install bundler --no-ri --no-rdoc
+							  - bundle install --jobs $(nproc)  "${FLAGS[@]}"
+
+							rspec:
+							  script:
+							    - bundle exec rspec
+
+							rubocop:
+							  script:
+							    - bundle exec rubocop
+							```
+						</textarea>
+
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Des instructions à retenir</h2>
+					</section>
+					<section>
+						<ul>
+							<li>before_script</li>
+							<li>variables</li>
+							<li>script</li>
+							<li>stage</li>
+							<li>only/except</li>
+							<li>tags</li>
+						</ul>
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
